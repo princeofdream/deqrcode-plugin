@@ -139,6 +139,10 @@ build_one() {
       --filename "deqrcode-${VERSION}-${target}.${ext}" \
       --overwrite-dest
     ok "打包完成 -> $out/"
+  else
+    local ext="zip"
+    [[ "$target" == "firefox" ]] && ext="xpi"
+    warn "未打包：本次只生成 dist/。加 -p|--package 才会产出 artifacts/${target}/deqrcode-${VERSION}-${target}.${ext}"
   fi
 }
 

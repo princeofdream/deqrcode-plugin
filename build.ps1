@@ -132,6 +132,10 @@ function Invoke-BuildOne {
         if ($LASTEXITCODE -ne 0) { Write-Fail "打包失败 ($Target)" }
         Write-Ok "打包完成 -> $out/"
     }
+    else {
+        $hintExt = if ($Target -eq 'firefox') { 'xpi' } else { 'zip' }
+        Write-Warn "未打包：本次只生成 dist\。加 -Package 才会产出 artifacts\$Target\deqrcode-$version-$Target.$hintExt"
+    }
 }
 
 if ($Browser -eq 'all') {
