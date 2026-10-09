@@ -3,6 +3,7 @@ import { getDecoderHost } from '../decoder-host';
 import { MENU_AREA_SELECT, MENU_DECODE_IMAGE, MENU_OPEN_HISTORY, registerMenus } from './menus';
 import { ensureAndSend } from './inject';
 import { runDecodePipeline, type PipelineContext } from './pipeline';
+import { toDeviceRect } from '../content/area-select';
 import type { AreaSelection, ContentReply } from '../shared/messages';
 import type { DecodeResult, ImageRef } from '../shared/types';
 import { getSettings } from '../storage/settings';
@@ -22,8 +23,20 @@ async function baseContext(tabId: number): Promise<PipelineContext> {
       const reply = await ensureAndSend<ContentReply>(tabId, { type: 'GRAB_PIXELS', srcUrl });
       return reply ?? { ok: false, error: 'NOT_FOUND' };
     },
-    async captureArea() {
-      return null;
+    async captureArea(sel: AreaSelection): Promise<ImageRef | null> {
+      const dataUrl = await browser.tabs.captureVisibleTab(
+        undefined as unknown as number,
+        { format: 'png' }
+      );
+      const blob = await (await fetch(dataUrl)).blob();
+      const bitmap = await createImageBitmap(blob);
+      const rect = toDeviceRect(sel);
+      const canvas = new OffscreenCanvas(rect.sw, rect.sh);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
+      ctx.drawImage(bitmap, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, rect.sw, rect.sh);
+      bitmap.close?.();
+      return { kind: 'blob', blob: await canvas.convertToBlob({ type: 'image/png' }) };
     },
     async fetchBlob(url) {
       const res = await fetch(url, { credentials: 'include' });
@@ -94,6 +107,14 @@ browser.runtime.onMessage.addListener(async (msg: unknown) => {
 
   if (m.type === 'OPEN_URL' && m.url) {
     await browser.tabs.create({ url: m.url });
+    return true;
+  }
+
+  if (m.type === 'AREA_SELECTED' && m.selection && sender.tab?.id) {
+    await runDecodePipeline({
+      ...(await baseContext(sender.tab.id)),
+      selection: m.selection,
+    });
     return true;
   }
 

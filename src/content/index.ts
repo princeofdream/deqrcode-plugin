@@ -4,6 +4,7 @@ import { isBackgroundCommand } from '../shared/messages';
 import { grabPixels } from './grab-image';
 import { showOverlay } from './overlay';
 import { copyText } from './copy';
+import { startAreaSelect } from './area-select';
 
 const w = window as unknown as { __DEQRCODE_LOADED__?: boolean };
 if (!w.__DEQRCODE_LOADED__) {
@@ -29,6 +30,13 @@ if (!w.__DEQRCODE_LOADED__) {
         });
         return true;
       })();
+    }
+
+    if (cmd.type === 'START_AREA_SELECT') {
+      startAreaSelect(async (selection) => {
+        await browser.runtime.sendMessage({ type: 'AREA_SELECTED', selection });
+      });
+      return Promise.resolve(true);
     }
 
     return undefined;
