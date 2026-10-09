@@ -128,12 +128,15 @@ build_one() {
 
   if [[ "$DO_PACKAGE" -eq 1 ]]; then
     local out="artifacts/${target}"
+    # Firefox 分发包用 .xpi，Chrome/Edge 用 .zip（两者都是同构的 zip 包）
+    local ext="zip"
+    [[ "$target" == "firefox" ]] && ext="xpi"
     mkdir -p "$out"
     info "打包到 $out …"
     node node_modules/web-ext/bin/web-ext.js build \
       --source-dir ./dist \
       --artifacts-dir "$out" \
-      --filename "deqrcode-${VERSION}-${target}.zip" \
+      --filename "deqrcode-${VERSION}-${target}.${ext}" \
       --overwrite-dest
     ok "打包完成 -> $out/"
   fi

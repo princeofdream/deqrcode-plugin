@@ -16,7 +16,8 @@
     "fixtures": "node tools/generate-fixtures.mjs",
     "eval": "node tools/evaluate.mjs",
     "lint": "web-ext lint --source-dir ./dist",
-    "start": "web-ext run --source-dir ./dist"
+    "start": "web-ext run --source-dir ./dist",
+    "sign": "web-ext sign --source-dir ./dist --artifacts-dir ./artifacts/firefox --channel unlisted"
   },
   "dependencies": {
     "idb": "^8.0.4",

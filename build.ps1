@@ -124,9 +124,11 @@ function Invoke-BuildOne {
 
     if ($Package) {
         $out = Join-Path 'artifacts' $Target
+        # Firefox 分发包用 .xpi，Chrome/Edge 用 .zip（两者都是同构的 zip 包）
+        $ext = if ($Target -eq 'firefox') { 'xpi' } else { 'zip' }
         New-Item -ItemType Directory -Force -Path $out | Out-Null
         Write-Step "打包到 $out …"
-        & node node_modules/web-ext/bin/web-ext.js build --source-dir ./dist --artifacts-dir $out --filename "deqrcode-$version-$Target.zip" --overwrite-dest
+        & node node_modules/web-ext/bin/web-ext.js build --source-dir ./dist --artifacts-dir $out --filename "deqrcode-$version-$Target.$ext" --overwrite-dest
         if ($LASTEXITCODE -ne 0) { Write-Fail "打包失败 ($Target)" }
         Write-Ok "打包完成 -> $out/"
     }
