@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "deQRCode",
+  "name": "__MSG_extensionName__",
   "version": "0.1.0",
-  "description": "右键解码网页图片中的二维码",
+  "description": "__MSG_extensionDescription__",
   "default_locale": "zh_CN",
   "icons": { "48": "icons/48.png", "96": "icons/96.png", "128": "icons/128.png" },
   "permissions": ["contextMenus", "activeTab", "scripting", "storage", "clipboardWrite"],
@@ -13,8 +13,7 @@
   },
   "background": {
     "scripts": ["assets/background.js"],
-    "service_worker": "assets/background.js",
-    "type": "module"
+    "service_worker": "assets/background.js"
   },
   "action": { "default_popup": "popup/index.html", "default_icon": "icons/48.png" },
   "options_ui": { "page": "options/index.html", "open_in_tab": false },

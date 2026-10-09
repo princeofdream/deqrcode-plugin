@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, cpSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, cpSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { build as esbuild } from 'esbuild';
 
@@ -11,7 +11,18 @@ const viteBin = () => resolve(root, 'node_modules/vite/bin/vite.js');
 // 1) 扩展页（ESM 多页构建）
 execFileSync(process.execPath, [viteBin(), 'build'], { stdio: 'inherit' });
 
-// 2) content script（必须是 IIFE：Firefox 以 classic script 注入）
+// 2) background + content script
+// 两者都以 classic script 形式加载（Firefox 不支持 background 的 type: module），
+// 因此统一打成自包含 IIFE
+await esbuild({
+  entryPoints: ['src/background/index.ts'],
+  bundle: true,
+  format: 'iife',
+  target: 'firefox115',
+  outfile: 'dist/assets/background.js',
+  logLevel: 'info',
+});
+
 await esbuild({
   entryPoints: ['src/content/index.ts'],
   bundle: true,
@@ -37,6 +48,9 @@ for (const size of [48, 96, 128]) {
 
 // 5) 语言包
 cpSync(resolve(root, '_locales'), resolve(root, 'dist/_locales'), { recursive: true });
+if (existsSync(resolve(root, 'PRIVACY.md'))) {
+  copyFileSync(resolve(root, 'PRIVACY.md'), resolve(root, 'dist/PRIVACY.md'));
+}
 
 // 6) zxing wasm（懒加载引擎运行时需要，必须与 chunks 同级）
 const wasmSrc = resolve(root, 'node_modules/zxing-wasm/dist/full/zxing_full.wasm');

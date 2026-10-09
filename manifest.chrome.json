@@ -1,4 +1,4 @@
 {
   "permissions": ["offscreen", "contextMenus", "activeTab", "scripting", "storage", "clipboardWrite"],
-  "background": { "service_worker": "assets/background.js", "type": "module" }
+  "background": { "service_worker": "assets/background.js" }
 }
