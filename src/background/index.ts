@@ -5,7 +5,7 @@ import { ensureAndSend } from './inject';
 import { runDecodePipeline, type PipelineContext } from './pipeline';
 import type { AreaSelection, ContentReply } from '../shared/messages';
 import type { DecodeResult, ImageRef } from '../shared/types';
-import { DEFAULT_SETTINGS } from '../shared/types';
+import { getSettings } from '../storage/settings';
 
 browser.runtime.onInstalled.addListener(() => {
   void registerMenus();
@@ -14,10 +14,10 @@ browser.runtime.onStartup?.addListener(() => {
   void registerMenus();
 });
 
-function baseContext(tabId: number): PipelineContext {
+async function baseContext(tabId: number): Promise<PipelineContext> {
   return {
     tabId,
-    settings: DEFAULT_SETTINGS,
+    settings: await getSettings(),
     async grabPixels(srcUrl) {
       const reply = await ensureAndSend<ContentReply>(tabId, { type: 'GRAB_PIXELS', srcUrl });
       return reply ?? { ok: false, error: 'NOT_FOUND' };
@@ -51,8 +51,15 @@ function baseContext(tabId: number): PipelineContext {
         message,
       });
     },
-    async record(_result: DecodeResult) {
-      // Task 10 接线历史写入
+    async record(result: DecodeResult, sourceUrl?: string) {
+      if (!result.success) return;
+      const { addRecord } = await import('../storage/history');
+      await addRecord({
+        content: result.data,
+        encoding: result.encoding,
+        contentType: result.contentType,
+        sourceUrl,
+      });
     },
   };
 }
@@ -78,7 +85,7 @@ browser.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 
   if (info.menuItemId === MENU_DECODE_IMAGE && info.srcUrl) {
-    await runDecodePipeline({ ...baseContext(tabId), srcUrl: info.srcUrl });
+    await runDecodePipeline({ ...(await baseContext(tabId)), srcUrl: info.srcUrl });
   }
 });
 
