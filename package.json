@@ -1,0 +1,36 @@
+{
+  "name": "deqrcode-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:firefox": "node scripts/build.mjs --browser=firefox",
+    "build:chrome": "node scripts/build.mjs --browser=chrome",
+    "icons": "node tools/make-icons.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "fixtures": "node tools/generate-fixtures.mjs",
+    "eval": "node tools/evaluate.mjs",
+    "lint": "web-ext lint --source-dir ./dist",
+    "start": "web-ext run --source-dir ./dist"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0",
+    "jsqr": "^1.4.0",
+    "zxing-wasm": "^3.1.5",
+    "idb": "^8.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/webextension-polyfill": "^0.12.0",
+    "esbuild": "^0.28.2",
+    "pngjs": "^7.0.0",
+    "qrcode": "^1.5.4",
+    "typescript": "^5.9.0",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3",
+    "web-ext": "^10.7.0"
+  }
+}

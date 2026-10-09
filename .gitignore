@@ -1,0 +1,7 @@
+node_modules/
+dist/
+artifacts/
+.web-ext-profile/
+web-ext-artifacts/
+*.log
+.DS_Store

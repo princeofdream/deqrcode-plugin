@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "deQRCode",
+  "version": "0.1.0",
+  "description": "右键解码网页图片中的二维码",
+  "default_locale": "zh_CN",
+  "icons": { "48": "icons/48.png", "96": "icons/96.png", "128": "icons/128.png" },
+  "permissions": ["contextMenus", "activeTab", "scripting", "storage", "clipboardWrite"],
+  "optional_permissions": ["notifications", "downloads"],
+  "optional_host_permissions": ["<all_urls>"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "background": {
+    "scripts": ["assets/background.js"],
+    "service_worker": "assets/background.js",
+    "type": "module"
+  },
+  "action": { "default_popup": "popup/index.html", "default_icon": "icons/48.png" },
+  "options_ui": { "page": "options/index.html", "open_in_tab": false },
+  "web_accessible_resources": [{ "resources": ["assets/*.wasm"], "matches": ["<all_urls>"] }]
+}

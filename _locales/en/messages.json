@@ -1,0 +1,11 @@
+{
+  "extensionName": { "message": "deQRCode", "description": "Extension name" },
+  "extensionDescription": { "message": "Decode QR codes in web images via context menu", "description": "Extension description" },
+  "menuDecodeImage": { "message": "Decode QR Code", "description": "Image context menu" },
+  "menuAreaSelect": { "message": "Decode from area screenshot", "description": "Page context menu" },
+  "menuOpenHistory": { "message": "Open history", "description": "Page context menu" },
+  "resultTitle": { "message": "QR Code result", "description": "Result overlay title" },
+  "copyContent": { "message": "Copy", "description": "Copy button" },
+  "openInNewTab": { "message": "Open in new tab", "description": "Open link button" },
+  "noQrCode": { "message": "No QR Code detected", "description": "Decode failure hint" }
+}
