@@ -38,4 +38,9 @@ for (const size of [48, 96, 128]) {
 // 5) 语言包
 cpSync(resolve(root, '_locales'), resolve(root, 'dist/_locales'), { recursive: true });
 
+// 6) zxing wasm（懒加载引擎运行时需要，必须与 chunks 同级）
+const wasmSrc = resolve(root, 'node_modules/zxing-wasm/dist/full/zxing_full.wasm');
+mkdirSync(resolve(root, 'dist/assets/chunks'), { recursive: true });
+copyFileSync(wasmSrc, resolve(root, 'dist/assets/chunks/zxing_full.wasm'));
+
 console.log(`built for ${browser} -> dist/`);

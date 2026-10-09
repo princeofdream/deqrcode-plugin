@@ -18,5 +18,5 @@
   },
   "action": { "default_popup": "popup/index.html", "default_icon": "icons/48.png" },
   "options_ui": { "page": "options/index.html", "open_in_tab": false },
-  "web_accessible_resources": [{ "resources": ["assets/*.wasm"], "matches": ["<all_urls>"] }]
+  "web_accessible_resources": [{ "resources": ["assets/chunks/*.wasm"], "matches": ["<all_urls>"] }]
 }
