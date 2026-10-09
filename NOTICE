@@ -1,0 +1,11 @@
+deQRCode Firefox Extension
+
+本产品包含以下第三方组件（许可条款以其各自仓库为准，逐字核对自 node_modules 中的 LICENSE 文件）：
+
+- jsQR — https://github.com/cozmo/jsQR — Apache License 2.0
+- zxing-wasm — https://github.com/Sec-ant/zxing-wasm — MIT License，Copyright (c) 2023 Ze-Zheng Wu
+- webextension-polyfill — https://github.com/mozilla/webextension-polyfill — Mozilla Public License 2.0
+- idb — https://github.com/jakearchibald/idb — ISC License，Copyright (c) 2016 Jake Archibald
+
+构建期依赖（Vitest / Vite / esbuild / TypeScript / web-ext / pngjs / qrcode 等）不随扩展分发，
+因此不在本 NOTICE 中逐一列出。
